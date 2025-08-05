@@ -1,5 +1,7 @@
 import icons from 'url:../img/icons.svg';
-import fakeData from './fakedata.json';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+// import fakeData from './fakedata.json';
 
 const recipeContainer = document.querySelector('.recipe');
 
@@ -32,19 +34,11 @@ const showRecipe = async function () {
     // 1, Loading recipe
     renderSpinner(recipeContainer);
 
-    const data = await fetch(
-      'https://forkify-api.jonas.io/api/v2/recipes/664c8f193e7aa067e94e882f?key=da77e19d-fc41-41ae-9cbe-8147a7bb6a50'
-    )
-      .then(response => {
-        if (!response.ok)
-          throw new Error(`${data.message} (${response.status})`);
-        return response.json();
-      })
-      .catch(() => {
-        return new Promise(resolve => {
-          setTimeout(() => resolve(fakeData), 1000);
-        });
-      });
+    const res = await fetch(
+      'https://forkify-api.jonas.io/api/v2/recipes/664c8f193e7aa067e94e882f'
+    );
+    const data = await res.json();
+    if (!res.ok) throw new Error(`${data.message} (${res.status})`);
 
     let { recipe } = data.data;
 
