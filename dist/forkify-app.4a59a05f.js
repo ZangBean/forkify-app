@@ -130,7 +130,7 @@
 
   // Only insert newRequire.load when it is actually used.
   // The code in this file is linted against ES5, so dynamic import is not allowed.
-  // INSERT_LOAD_HERE
+  function $parcel$resolve(url) {  url = importMap[url] || url;  return import.meta.resolve(distDir + url);}newRequire.resolve = $parcel$resolve;
 
   Object.defineProperty(newRequire, 'root', {
     get: function () {
@@ -160,7 +160,7 @@
       });
     }
   }
-})({"5DuvQ":[function(require,module,exports,__globalThis) {
+})({"appxp":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
@@ -667,6 +667,11 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"7dWZ8":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+var _iconsSvg = require("url:../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+var _fakedataJson = require("./fakedata.json");
+var _fakedataJsonDefault = parcelHelpers.interopDefault(_fakedataJson);
 const recipeContainer = document.querySelector('.recipe');
 const timeout = function(s) {
     return new Promise(function(_, reject) {
@@ -675,16 +680,31 @@ const timeout = function(s) {
         }, s * 1000);
     });
 };
-// NEW API URL (instead of the one shown in the video)
 // https://forkify-api.jonas.io
 ///////////////////////////////////////
+const renderSpinner = function(parentEl) {
+    const markup = `
+    <div class="spinner">
+      <svg>
+        <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
+      </svg>
+    </div>
+  `;
+    parentEl.innerHTML = '';
+    parentEl.insertAdjacentHTML('afterbegin', markup);
+};
 const showRecipe = async function() {
     try {
         // 1, Loading recipe
-        const res = await fetch('https://forkify-api.jonas.io/api/v2/recipes/664c8f193e7aa067e94e882f');
-        const data = await res.json();
-        if (!res.ok) throw new Error(`${data.message} (${res.status})`);
-        console.log(res, data);
+        renderSpinner(recipeContainer);
+        const data = await fetch('https://forkify-api.jonas.io/api/v2/recipes/664c8f193e7aa067e94e882f?key=da77e19d-fc41-41ae-9cbe-8147a7bb6a50').then((response)=>{
+            if (!response.ok) throw new Error(`${data.message} (${response.status})`);
+            return response.json();
+        }).catch(()=>{
+            return new Promise((resolve)=>{
+                setTimeout(()=>resolve((0, _fakedataJsonDefault.default)), 1000);
+            });
+        });
         let { recipe } = data.data;
         recipe = {
             id: recipe.id,
@@ -696,40 +716,39 @@ const showRecipe = async function() {
             cookingTime: recipe.cooking_time,
             ingredients: recipe.ingredients
         };
-        console.log(recipe);
         // 2, Rendering recipe
         const markup = `
     <figure class="recipe__fig">
-          <img src="src/img/test-1.jpg" alt="Tomato" class="recipe__img" />
+          <img src="${recipe.image}" alt="${recipe.title}" class="recipe__img" />
           <h1 class="recipe__title">
-            <span>Pasta with tomato cream sauce</span>
+            <span>${recipe.title}</span>
           </h1>
         </figure>
 
         <div class="recipe__details">
           <div class="recipe__info">
             <svg class="recipe__info-icon">
-              <use href="src/img/icons.svg#icon-clock"></use>
+              <use href="${(0, _iconsSvgDefault.default)}#icon-clock"></use>
             </svg>
-            <span class="recipe__info-data recipe__info-data--minutes">45</span>
+            <span class="recipe__info-data recipe__info-data--minutes">${recipe.cookingTime}</span>
             <span class="recipe__info-text">minutes</span>
           </div>
           <div class="recipe__info">
             <svg class="recipe__info-icon">
-              <use href="src/img/icons.svg#icon-users"></use>
+              <use href="${(0, _iconsSvgDefault.default)}#icon-users"></use>
             </svg>
-            <span class="recipe__info-data recipe__info-data--people">4</span>
+            <span class="recipe__info-data recipe__info-data--people">${recipe.servings}</span>
             <span class="recipe__info-text">servings</span>
 
             <div class="recipe__info-buttons">
               <button class="btn--tiny btn--increase-servings">
                 <svg>
-                  <use href="src/img/icons.svg#icon-minus-circle"></use>
+                  <use href="${(0, _iconsSvgDefault.default)}#icon-minus-circle"></use>
                 </svg>
               </button>
               <button class="btn--tiny btn--increase-servings">
                 <svg>
-                  <use href="src/img/icons.svg#icon-plus-circle"></use>
+                  <use href="${(0, _iconsSvgDefault.default)}#icon-plus-circle"></use>
                 </svg>
               </button>
             </div>
@@ -737,12 +756,12 @@ const showRecipe = async function() {
 
           <div class="recipe__user-generated">
             <svg>
-              <use href="src/img/icons.svg#icon-user"></use>
+              <use href="${(0, _iconsSvgDefault.default)}#icon-user"></use>
             </svg>
           </div>
           <button class="btn--round">
             <svg class="">
-              <use href="src/img/icons.svg#icon-bookmark-fill"></use>
+              <use href="${(0, _iconsSvgDefault.default)}#icon-bookmark-fill"></use>
             </svg>
           </button>
         </div>
@@ -750,20 +769,25 @@ const showRecipe = async function() {
         <div class="recipe__ingredients">
           <h2 class="heading--2">Recipe ingredients</h2>
           <ul class="recipe__ingredient-list">
-            <li class="recipe__ingredient">
-              <svg class="recipe__icon">
-                <use href="src/img/icons.svg#icon-check"></use>
-              </svg>
-              <div class="recipe__quantity">1000</div>
-              <div class="recipe__description">
-                <span class="recipe__unit">g</span>
-                pasta
-              </div>
-            </li>
+          ${recipe.ingredients.map((ing)=>{
+            return `
+              <li class="recipe__ingredient">
+                <svg class="recipe__icon">
+                  <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
+                </svg>
+                <div class="recipe__quantity">${ing.quantity}</div>
+                <div class="recipe__description">
+                  <span class="recipe__unit">${ing.unit}</span>
+                  ${ing.description}
+                </div>
+              </li>
+            `;
+        }).join('')}
+            
 
             <li class="recipe__ingredient">
               <svg class="recipe__icon">
-                <use href="src/img/icons.svg#icon-check"></use>
+                <use href="${(0, _iconsSvgDefault.default)}#icon-check"></use>
               </svg>
               <div class="recipe__quantity">0.5</div>
               <div class="recipe__description">
@@ -778,27 +802,65 @@ const showRecipe = async function() {
           <h2 class="heading--2">How to cook it</h2>
           <p class="recipe__directions-text">
             This recipe was carefully designed and tested by
-            <span class="recipe__publisher">The Pioneer Woman</span>. Please check out
+            <span class="recipe__publisher">${recipe.publisher}</span>. Please check out
             directions at their website.
           </p>
           <a
             class="btn--small recipe__btn"
-            href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/"
+            href="${recipe.sourceUrl}"
             target="_blank"
           >
             <span>Directions</span>
             <svg class="search__icon">
-              <use href="src/img/icons.svg#icon-arrow-right"></use>
+              <use href="${(0, _iconsSvgDefault.default)}#icon-arrow-right"></use>
             </svg>
           </a>
         </div>
     `;
+        recipeContainer.innerHTML = '';
+        recipeContainer.insertAdjacentHTML('afterbegin', markup);
     } catch (err) {
         alert(err);
     }
 };
 showRecipe();
 
-},{}]},["5DuvQ","7dWZ8"], "7dWZ8", "parcelRequire3a11", {})
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./fakedata.json":"fD88D","url:../img/icons.svg":"fd0vu"}],"jnFvT":[function(require,module,exports,__globalThis) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"fD88D":[function(require,module,exports,__globalThis) {
+module.exports = JSON.parse("{\"status\":\"success\",\"data\":{\"recipe\":{\"publisher\":\"My Baking Addiction\",\"ingredients\":[{\"quantity\":1,\"unit\":\"\",\"description\":\"tbsp. canola or olive oil\"},{\"quantity\":0.5,\"unit\":\"cup\",\"description\":\"chopped sweet onion\"},{\"quantity\":3,\"unit\":\"cups\",\"description\":\"diced fresh red yellow and green bell peppers\"},{\"quantity\":1,\"unit\":\"\",\"description\":\"tube refrigerated pizza dough\"},{\"quantity\":0.5,\"unit\":\"cup\",\"description\":\"salsa\"},{\"quantity\":2,\"unit\":\"cups\",\"description\":\"sargento chefstyle shredded pepper jack cheese\"},{\"quantity\":null,\"unit\":\"\",\"description\":\"Chopped cilantro or dried oregano\"}],\"source_url\":\"http://www.mybakingaddiction.com/spicy-chicken-and-pepper-jack-pizza-recipe/\",\"image_url\":\"http://forkify-api.herokuapp.com/images/FlatBread21of1a180.jpg\",\"title\":\"Spicy Chicken and Pepper Jack Pizza\",\"servings\":4,\"cooking_time\":45,\"id\":\"5ed6604591c37cdc054bc886\"}}}");
+
+},{}],"fd0vu":[function(require,module,exports,__globalThis) {
+module.exports = module.bundle.resolve("icons.0809ef97.svg") + "?" + Date.now();
+
+},{}]},["appxp","7dWZ8"], "7dWZ8", "parcelRequire3a11", {}, "./", "/")
 
 //# sourceMappingURL=forkify-app.4a59a05f.js.map
