@@ -1,0 +1,24 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "Recipe application",
+  "homepage": "https://github.com/ZangBean/forkify-app#readme",
+  "bugs": {
+    "url": "https://github.com/ZangBean/forkify-app/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZangBean/forkify-app.git"
+  },
+  "license": "ISC",
+  "author": "Than Truong Giang",
+  "type": "commonjs",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.15.4",
+    "parcel": "^2.15.4"
+  }
+}
