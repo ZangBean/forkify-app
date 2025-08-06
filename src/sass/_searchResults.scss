@@ -12,12 +12,15 @@
 .pagination {
   margin-top: auto;
   padding: 0 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  &::after {
-    content: '';
-    display: table;
-    clear: both;
-  }
+  // &::after {
+  //   content: '';
+  //   display: table;
+  //   clear: both;
+  // }
 
   &__btn {
     &--prev {
@@ -27,6 +30,17 @@
       float: right;
     }
   }
+}
+
+.pagination__current {
+  color: #ffffff;
+  background-image: linear-gradient(to bottom right, #fbdb89, #f48982);
+  border: none;
+  border-radius: 10rem;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 .copyright {
