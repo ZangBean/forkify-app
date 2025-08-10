@@ -15,10 +15,15 @@
   "type": "commonjs",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html --public-url ./"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.15.4",
     "parcel": "^2.15.4"
+  },
+  "dependencies": {
+    "core-js": "^3.45.0",
+    "fracty": "^1.0.12",
+    "regenerator-runtime": "^0.14.1"
   }
 }
