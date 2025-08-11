@@ -30,7 +30,9 @@ const controlRecipes = async function () {
     const id = window.location.hash.slice(1);
 
     if (!id) return;
-    recipeView.renderSpinner();
+    if (window.innerWidth >= 705) {
+      recipeView.renderSpinner();
+    }
 
     // 0, Update results view to mark selected search result
     resultsView.update(model.getSearchResultsPage());
@@ -122,7 +124,7 @@ const controlAddRecipe = async function (newRecipe) {
 
     setTimeout(() => {
       addRecipeView.renderForm();
-    }, 2000);
+    }, 1500);
 
     // Render bookmark view
     bookmarksView.render(model.state.bookmarks);

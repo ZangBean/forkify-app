@@ -68,7 +68,19 @@
     justify-content: center;
   }
   .search-results {
-    padding: 0 0 3rem 0;
+    padding: 0;
+  }
+  .copyright {
+    display: none;
+  }
+  .results {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 0;
+  }
+  .pagination {
+    padding: 2rem 5rem;
+    border-top: 1px solid #f9f5f3;
   }
 }
 
@@ -85,9 +97,6 @@
   .recipe__info:not(:last-child) {
     margin-right: 2rem;
   }
-  .pagination {
-    padding: 0 3rem;
-  }
   .bookmarks {
     right: -5rem;
   }
@@ -96,5 +105,8 @@
 @media (max-width: 480px) {
   .container {
     margin: 0;
+  }
+  .recipe__details {
+    padding: 7.5rem 2rem 3.5rem;
   }
 }
