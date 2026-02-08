@@ -30,7 +30,9 @@ const controlRecipes = async function () {
     const id = window.location.hash.slice(1);
 
     if (!id) return;
-    recipeView.renderSpinner();
+    if (window.innerWidth >= 705) {
+      recipeView.renderSpinner();
+    }
 
     // 0, Update results view to mark selected search result
     resultsView.update(model.getSearchResultsPage());
@@ -55,7 +57,11 @@ const controlSearchResults = async function () {
 
     const query = searchView.getQuery();
     if (!query) {
-      resultsView.renderError('Please enter the search keyword!');
+      resultsView.renderError(
+        '<span class="search__err">Please enter the search keyword!</span>'
+      );
+      document.querySelector('.search__err').classList.add('typing');
+      paginationView._clear();
       return;
     }
 
@@ -109,7 +115,6 @@ const controlAddRecipe = async function (newRecipe) {
 
     // Upload the new recipe data
     await model.uploadRecipe(newRecipe);
-    console.log(model.state.recipe);
 
     // Render recipe
     recipeView.render(model.state.recipe);
@@ -117,16 +122,20 @@ const controlAddRecipe = async function (newRecipe) {
     // Success message
     addRecipeView.renderMessage();
 
+    setTimeout(() => {
+      addRecipeView.renderForm();
+    }, 1500);
+
     // Render bookmark view
     bookmarksView.render(model.state.bookmarks);
 
     // Change ID in URL
     window.history.pushState(null, '', `#${model.state.recipe.id}`);
 
-    // Close form window
-    setTimeout(function () {
-      addRecipeView.toggleWindow();
-    }, MODAL_CLOSE_SEC * 1000);
+    // // Close form window
+    // setTimeout(function () {
+    //   addRecipeView.toggleWindow();
+    // }, MODAL_CLOSE_SEC * 1000);
   } catch (err) {
     console.error('💥', err);
     addRecipeView.renderError(err.message);
